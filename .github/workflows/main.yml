@@ -27,8 +27,4 @@ jobs:
         run: |
           cd WebApp/WebApp/
           dotnet build --configuration Release
-          ls -lah
-           git status
-           git commit -m "Commit Artifacts to the repository"
-
-           git push
+        
