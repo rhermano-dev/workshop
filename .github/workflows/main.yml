@@ -1,0 +1,13 @@
+name: Workshop CI
+on:
+  pull_request:
+    branches:
+      - main
+      
+jobs:
+  sample_echo:
+    runs-on: Ubuntu-latest
+
+    steps:
+      - name: Sample echo
+        run: echo "hello world from workflow"
