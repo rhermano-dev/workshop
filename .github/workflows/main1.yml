@@ -1,0 +1,86 @@
+name: Workshop CI
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  CI:
+    runs-on: Ubuntu-latest
+    
+    steps:
+      - name: Checkout code # name of step
+        uses: actions/checkout@v2 # uses package
+        # with: # settings
+        #   token: $ {{ secrets.WORKSHOP_TOKEN }} # setting 1
+
+      - name: Check files
+        run: |
+          ls -lah # show files in current directory
+
+      - name: Setup .NET environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Build Application
+        run: |
+          cd WebApp/WebApp/
+          dotnet build --configuration Release
+          ls -lah
+          
+      - name: Publish Application
+        run: |
+          cd WebApp/WebApp/
+          dotnet publish -o ./publish
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with: 
+          name: published-artifacts
+          path: WebApp/WebApp/publish
+          
+  CD: 
+     runs-on: Ubuntu-latest
+     needs: CI
+
+     steps:
+
+       - name: Download Artifacts
+         uses: actions/download-artifact@v2
+         with: 
+           name: published-artifacts
+           path: ./published-artifacts
+           
+       - name: Check files
+         run: |
+            ls -lah
+            ls -lah published-artifacts/    
+            
+       - name: checkout Release repository
+         uses: actions/checkout@v2
+         with: 
+           repository: rhermano-dev/devops_release
+           path: ./destination-repo
+           token: S {{ secrets.WORKSHOP_TOKEN1 }
+           
+       - name: Update Release repository
+         run: |
+           rm -rf ./destination-repo/WebAPI/*
+           
+       - name: Copy Artifacts
+         run:
+           cp -r ./published-artifacts/* ./destination-repo/WebAPI/
+
+       - name: Commit and Push Artifacts to repository
+         run: |
+           cd ./destination-repo/WebAPI
+
+           git config user.name "rhermano devops"
+           git config user.email "reynaldohermano3@gmail.com"
+
+           git add . 
+           git status
+           git commit -m "Commit Artifacts to the repository"
+
+           git push
