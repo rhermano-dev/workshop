@@ -5,8 +5,9 @@ on:
       - main
       
 jobs:
-  sample_echo:
+  Sample_Job:
     runs-on: Ubuntu-latest
+    
     steps:
       - name: Checkout code # name of step
         uses: actions/checkout@v2 # uses package
@@ -16,3 +17,14 @@ jobs:
       - name: Check files
         run: |
           ls -lah # show files in current directory
+
+      - name: Setup .NET environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Build Application
+        run: |
+          cd WebApp/WebApp/
+          dotnet build --configuration Release
+          ls -lah
