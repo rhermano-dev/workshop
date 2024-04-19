@@ -55,6 +55,32 @@ jobs:
        - name: Check files
          run: |
             ls -lah
-            ls -lah published-artifacts/*
+            ls -lah published-artifacts/    
+            
+       - name: checkout Release repository
+         uses: actions/checkout@v2
+         with: 
+           repository: rhermano-dev/devops_release
+           path: ./destination-repo
+           token: S {{ secrets.WORKSHOP_TOKEN1 }
+           
+       - name: Update Release repository
+         run: |
+           rm -rf ./destination-repo/WebAPI/*
+           
+       - name: Copy Artifacts
+         run:
+           cp -r ./published-artifacts/* ./destination-repo/WebAPI/
 
-         
+       - name: Commit and Push Artifacts to repository
+         run: |
+           cd ./destination-repo/WebAPI
+
+           git config user.name "rhermano devops"
+           git config user.email "reynaldohermano3@gmail.com"
+
+           git add . 
+           git status
+           git commit -m "Commit Artifacts to the repository"
+
+           git push
