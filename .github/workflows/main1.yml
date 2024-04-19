@@ -1,11 +1,11 @@
-name: Workshop CI
+name: Workshop CD
 on:
   push:
     branches:
       - main
       
 jobs:
-  CI:
+  CD_1:
     runs-on: Ubuntu-latest
     
     steps:
@@ -40,9 +40,9 @@ jobs:
           name: published-artifacts
           path: WebApp/WebApp/publish
           
-  CD: 
+  CD_2: 
      runs-on: Ubuntu-latest
-     needs: CI
+     needs: CD_1
 
      steps:
 
