@@ -9,5 +9,11 @@ jobs:
     runs-on: Ubuntu-latest
 
     steps:
-      - name: Sample echo
-        run: echo "hello world from workflow"
+      - name: Checkout code # name of step
+        uses: actions/checkout@v2 # uses package
+        with: # settings
+          token: $ {{ secrets.WORKSHOP_TOKEN }} # setting 1
+
+      - name: Check files
+        run: |
+          ls -lah # show files in current directory
