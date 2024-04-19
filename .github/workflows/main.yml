@@ -28,3 +28,15 @@ jobs:
           cd WebApp/WebApp/
           dotnet build --configuration Release
           ls -lah
+          
+      - name: Publish Application
+        run: |
+          cd WebApp/WebApp/
+          dotnet publish -o ./publish
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with: 
+          name: published-artifacts
+          path: WebApp/WebApp/publish
+        
